@@ -53,11 +53,6 @@ button {
   padding: 0.25rem 0.5rem;
 }
 
-#map {
-  height: 300px; 
-  width: 100%; 
-}
-
 main {
   display: flex;
   flex-direction: column;

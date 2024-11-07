@@ -43,19 +43,6 @@ document.getElementById('fetchWeatherButton').addEventListener('click', async ()
         <p><strong>Weather:</strong> ${weatherData.weather[0].description}</p>
       </div>
     `;
-
-    const lat = weatherData.coord.lat;
-    const lon = weatherData.coord.lon;
-
-    const map = L.map('map').setView([lat, lon], 10);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    L.marker([lat, lon]).addTo(map)
-      .bindPopup(`<b>${weatherData.name}</b><br>${weatherData.weather[0].description}`)
-      .openPopup();
   }
 });
 
