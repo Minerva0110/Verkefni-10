@@ -3,7 +3,6 @@ import './style.css'
 const apiKey = 'c012d6b1f6371dd54c159ca5630bd11c';
 const weatherApiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
-// Fetch the weather data using the API
 async function fetchWeather(city) {
   const response = await fetch(`${weatherApiUrl}?q=${city}&appid=${apiKey}&units=metric`);
   const data = await response.json();
@@ -21,11 +20,12 @@ document.querySelector('#app').innerHTML = `
     <div class="weather">
       <button id="fetchWeatherButton" class="locations__button" type="button">Get Weather</button>
       <div id="weatherInfo" class="results"></div>
+      <!-- Add a div to hold the map -->
+      <div id="map" style="height: 300px; width: 100%;"></div>
     </div>
   </main>
 `;
 
-// Handle the click event to fetch the weather for a city
 document.getElementById('fetchWeatherButton').addEventListener('click', async () => {
   const city = prompt("Enter city name:");
   const weatherData = await fetchWeather(city);
@@ -41,5 +41,17 @@ document.getElementById('fetchWeatherButton').addEventListener('click', async ()
         <p><strong>Weather:</strong> ${weatherData.weather[0].description}</p>
       </div>
     `;
+  
+    const lat = weatherData.coord.lat;
+    const lon = weatherData.coord.lon;
+    const map = L.map('map').setView([lat, lon], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    L.marker([lat, lon]).addTo(map)
+      .bindPopup(`<b>${weatherData.name}</b><br>${weatherData.weather[0].description}`)
+      .openPopup();
   }
 });
