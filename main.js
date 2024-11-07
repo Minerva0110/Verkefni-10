@@ -1,24 +1,45 @@
 import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+
+const apiKey = 'c012d6b1f6371dd54c159ca5630bd11c';
+const weatherApiUrl = 'https://api.openweathermap.org/data/2.5/weather';
+
+// Fetch the weather data using the API
+async function fetchWeather(city) {
+  const response = await fetch(`${weatherApiUrl}?q=${city}&appid=${apiKey}&units=metric`);
+  const data = await response.json();
+  
+  if (data.cod === 200) {
+    return data;
+  } else {
+    return { error: "City not found" };
+  }
+}
 
 document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
+  <main>
+    <h1>Weather App</h1>
+    <div class="weather">
+      <button id="fetchWeatherButton" class="locations__button" type="button">Get Weather</button>
+      <div id="weatherInfo" class="results"></div>
     </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+  </main>
+`;
 
-setupCounter(document.querySelector('#counter'))
+// Handle the click event to fetch the weather for a city
+document.getElementById('fetchWeatherButton').addEventListener('click', async () => {
+  const city = prompt("Enter city name:");
+  const weatherData = await fetchWeather(city);
+
+  const weatherInfoDiv = document.getElementById('weatherInfo');
+  if (weatherData.error) {
+    weatherInfoDiv.innerHTML = `<p>${weatherData.error}</p>`;
+  } else {
+    weatherInfoDiv.innerHTML = `
+      <div class="forecast">
+        <p><strong>City:</strong> ${weatherData.name}</p>
+        <p><strong>Temperature:</strong> ${weatherData.main.temp}°C</p>
+        <p><strong>Weather:</strong> ${weatherData.weather[0].description}</p>
+      </div>
+    `;
+  }
+});
