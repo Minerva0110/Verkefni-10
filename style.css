@@ -51,6 +51,17 @@ button {
 
 button {
   padding: 0.25rem 0.5rem;
+  background-color: #1560bd;
+  color: white; 
+  border: none; 
+  border-radius: 5px;
+  cursor: pointer; 
+  font-size: var(--font-size-button);
+  transition: background-color 0.3s ease; 
+}
+
+button:hover {
+  background-color: #1034a6; 
 }
 
 main {
